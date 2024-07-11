@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { useAuth } from '../context/AuthContext';
 
 const SignupScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [fullName, setFullName] = useState<string>('');
@@ -29,15 +30,21 @@ const SignupScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [openSeller, setOpenSeller] = useState(false);
   const [openCity, setOpenCity] = useState(false);
 
+  const { register } = useAuth();
+
   const handleSignup = () => {
     if (!email || !password || !fullName || password !== confirmPassword) {
       Alert.alert('Erro', 'Por favor, insira todos os campos e certifique-se de que as senhas correspondem');
       return;
     }
 
-    // Lógica para cadastro
+    const userData = { email, fullName, cellPhone, address, selectedSeller, selectedCity };
+    register(userData);
     Alert.alert('Sucesso', 'Cadastro realizado com sucesso');
-    navigation.navigate('Login');
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Home' }],
+    });
   };
 
   const sellers = [
