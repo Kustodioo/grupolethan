@@ -8,16 +8,15 @@ import {
   StatusBar,
   Keyboard,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  Platform,
   Alert,
-  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useAuth } from '../context/AuthContext';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const SignupScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
+  const { register } = useAuth();
   const [fullName, setFullName] = useState<string>('');
   const [cellPhone, setCellPhone] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -30,21 +29,19 @@ const SignupScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [openSeller, setOpenSeller] = useState(false);
   const [openCity, setOpenCity] = useState(false);
 
-  const { register } = useAuth();
-
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (!email || !password || !fullName || password !== confirmPassword) {
       Alert.alert('Erro', 'Por favor, insira todos os campos e certifique-se de que as senhas correspondem');
       return;
     }
 
-    const userData = { email, fullName, cellPhone, address, selectedSeller, selectedCity };
-    register(userData);
-    Alert.alert('Sucesso', 'Cadastro realizado com sucesso');
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Home' }],
-    });
+    try {
+      await register({ fullName, cellPhone, email, address, selectedSeller, selectedCity, password });
+      Alert.alert('Sucesso', 'Cadastro realizado com sucesso');
+      navigation.navigate('Home');
+    } catch (error: any) {  // Adiciona tipo 'any' para o erro
+      Alert.alert('Erro', error.message);
+    }
   };
 
   const sellers = [
@@ -62,12 +59,9 @@ const SignupScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1 }}
-      >
+      <KeyboardAwareScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
+          <View style={styles.innerContainer}>
             <Text style={styles.title}>Cadastre-se</Text>
             <TextInput
               style={styles.input}
@@ -145,9 +139,9 @@ const SignupScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
             <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Login')}>
               <Text style={styles.backButtonText}>Voltar para Login</Text>
             </TouchableOpacity>
-          </ScrollView>
+          </View>
         </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -163,6 +157,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     backgroundColor: '#333333',
+  },
+  innerContainer: {
+    width: '100%',
+    alignItems: 'center',
   },
   title: {
     fontSize: 24,

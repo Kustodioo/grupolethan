@@ -5,16 +5,38 @@ const api = axios.create({
 });
 
 export const registerUser = async (userData) => {
-  const response = await api.post('/register', userData);
-  return response.data;
+  try {
+    const response = await api.post('/register', userData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response ? error.response.data.message : 'Network Error');
+  }
 };
 
 export const loginUser = async (userData) => {
-  const response = await api.post('/login', userData);
-  return response.data;
+  try {
+    const response = await api.post('/login', userData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response ? error.response.data.message : 'Network Error');
+  }
 };
 
 export const resetPassword = async (email) => {
-  const response = await api.post('/reset-password', { email });
-  return response.data;
+  try {
+    const response = await api.post('/reset-password', { email });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response ? error.response.data.message : 'Network Error');
+  }
+};
+
+// Nova função para atualizar o perfil do usuário
+export const updateUserProfile = async (userData) => {
+  try {
+    const response = await api.put('/update-profile', userData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response ? error.response.data.message : 'Network Error');
+  }
 };
