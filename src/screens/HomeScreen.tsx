@@ -1,102 +1,165 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar, TextInput, Alert, ScrollView, Image, Modal, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, TextInput, Alert, ScrollView, Image, Modal, Pressable, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
 import * as Clipboard from 'expo-clipboard';
 import { FontAwesome } from '@expo/vector-icons';
+import { PieChart } from 'react-native-svg-charts';
+import { Circle, G, Text as SVGText, Defs, LinearGradient, Stop } from 'react-native-svg';
 
 const HomeScreen: React.FC = () => {
-  const { user } = useAuth(); // Pega o usuário autenticado do contexto
-  const [isDarkMode, setIsDarkMode] = useState(true); // Estado para alternar entre tema claro e escuro
-  const [modalVisible, setModalVisible] = useState(false); // Estado para controlar a visibilidade do modal
+  const { user } = useAuth();
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  // Função para alternar o tema
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
 
-  // Link do cliente gerado automaticamente
   const clientLink = `https://lethan.com/register?ref=${user?.id}`;
 
-  // Função para copiar o link para a área de transferência
   const copyToClipboard = () => {
     Clipboard.setString(clientLink);
     Alert.alert('Link Copiado', 'O link do cliente foi copiado para a área de transferência.');
   };
 
+  const pieData = [
+    {
+      key: 1,
+      amount: 50,
+      svg: { fill: '#00CFFF' },
+      label: 'Cáceres',
+    },
+    {
+      key: 2,
+      amount: 80,
+      svg: { fill: '#FFC300' },
+      label: 'Cuiabá',
+    },
+    {
+      key: 3,
+      amount: 30,
+      svg: { fill: '#1ABC9C' },
+      label: 'Araputanga',
+    },
+    {
+      key: 4,
+      amount: 40,
+      svg: { fill: '#8E44AD' },
+      label: 'Frederico W',
+    },
+    {
+      key: 5,
+      amount: 60,
+      svg: { fill: '#FF5733' },
+      label: 'Nova Mutum',
+    },
+  ];
+
+  const smallData1 = [
+    {
+      key: 1,
+      amount: 5,
+      svg: { fill: 'url(#grad1)' },
+      label: 'Atendidas',
+    },
+  ];
+
+  const smallData2 = [
+    {
+      key: 1,
+      amount: 4,
+      svg: { fill: 'url(#grad2)' },
+      label: 'Pendentes',
+    },
+  ];
+
+  const Gradient = ({ id, colors }: { id: string, colors: string[] }) => (
+    <G>
+      <Defs>
+        <LinearGradient id={id} x1="0%" y1="0%" x2="100%" y2="100%">
+          {colors.map((color, index) => (
+            <Stop key={index} offset={`${(index / (colors.length - 1)) * 100}%`} stopColor={color} />
+          ))}
+        </LinearGradient>
+      </Defs>
+    </G>
+  );
+
   const styles = StyleSheet.create({
     safeArea: {
       flex: 1,
-      backgroundColor: isDarkMode ? '#222222' : '#DDDDDD', // Cor de fundo da tela, muda com o tema
+      backgroundColor: isDarkMode ? '#222222' : '#DDDDDD',
     },
     container: {
       flexGrow: 1,
       alignItems: 'center',
       paddingHorizontal: 20,
-      backgroundColor: isDarkMode ? '#333333' : '#FFFFFF', // Cor de fundo do contêiner principal, muda com o tema
+      backgroundColor: isDarkMode ? '#333333' : '#FFFFFF',
     },
     header: {
       width: '100%',
       alignItems: 'center',
-      paddingTop: StatusBar.currentHeight, // Preenche até a altura da barra de status
+      paddingTop: StatusBar.currentHeight,
       paddingBottom: 20,
-      backgroundColor: isDarkMode ? '#222222' : '#DDDDDD', // Cor de fundo do cabeçalho, muda com o tema
+      backgroundColor: isDarkMode ? '#222222' : '#DDDDDD',
       position: 'relative',
     },
     logoBackground: {
       position: 'absolute',
-      top: StatusBar.currentHeight, // Posiciona a logo no topo, abaixo da barra de status
+      top: StatusBar.currentHeight,
       width: '100%',
       height: 180,
       justifyContent: 'center',
       alignItems: 'center',
-      opacity: 0.0, // Opacidade da logo de fundo
+      opacity: 0.0,
     },
     logo: {
       width: 190,
       height: 190,
       marginTop: -40,
       marginBottom: -45,
-      resizeMode: 'contain', // Redimensiona a logo para caber no contêiner
+      resizeMode: 'contain',
     },
     themeButton: {
       position: 'absolute',
-      top: StatusBar.currentHeight, // Posiciona o botão de tema no topo, abaixo da barra de status
+      top: StatusBar.currentHeight,
       right: 370,
       padding: 6,
       marginTop: 40,
-      zIndex: 1, // Mantém o botão de tema acima da logo de fundo
+      zIndex: 1,
     },
     contentContainer: {
       width: '100%',
       alignItems: 'center',
       padding: 20,
-      backgroundColor: isDarkMode ? '#333333' : '#FFFFFF', // Cor de fundo do contêiner de conteúdo, muda com o tema
+      backgroundColor: isDarkMode ? '#333333' : '#FFFFFF',
       borderRadius: 10,
       marginTop: 20,
     },
     title: {
-      fontSize: 24,
-      color: isDarkMode ? '#FFFFFF' : '#000000', // Cor do texto, muda com o tema
+      fontSize: 30,
+      color: isDarkMode ? '#FFFFFF' : '#000000',
       marginBottom: 10,
       textAlign: 'center',
+      fontFamily: 'CustomFont-Bold',
     },
     welcome: {
       fontSize: 18,
-      color: isDarkMode ? '#FFFFFF' : '#000000', // Cor do texto, muda com o tema
+      color: isDarkMode ? '#FFFFFF' : '#000000',
       marginBottom: 10,
       textAlign: 'center',
-      fontFamily: 'CustomFont-Bold', // Fonte personalizada
+      fontFamily: 'CustomFont-Bold',
     },
     linkInput: {
       width: '100%',
-      height: 40,
+      height: 30,
       borderColor: 'gray',
-      borderWidth: 1,
+      borderWidth: 3,
       marginBottom: 10,
-      paddingHorizontal: 10,
+      paddingHorizontal: 50,
       backgroundColor: 'rgba(255, 255, 255, 0.8)',
-      borderRadius: 5,
+      borderRadius: 25,
       color: '#333',
     },
     copyButton: {
@@ -105,12 +168,64 @@ const HomeScreen: React.FC = () => {
       backgroundColor: '#069DD9',
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 20,
+      borderRadius: 50,
       marginBottom: 20,
+      marginTop: 5,
     },
     copyButtonText: {
       color: '#fff',
       fontSize: 16,
+    },
+    chartTitle: {
+      fontSize: 18,
+      color: isDarkMode ? '#FFFFFF' : '#000000',
+      backgroundColor: '#FFC300',
+      padding: 10,
+      borderRadius: 5,
+      textAlign: 'center',
+      marginBottom: 10,
+      fontFamily: 'CustomFont-Bold',
+    },
+    chartLegend: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      width: '100%',
+      marginTop: 10,
+    },
+    chartLegendText: {
+      fontSize: 16,
+      color: isDarkMode ? '#FFFFFF' : '#000000',
+      fontFamily: 'CustomFont-Regular',
+      marginHorizontal: 10,
+    },
+    chartContainer: {
+      width: Dimensions.get('window').width - 40,
+      height: 220,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 20,
+    },
+    smallChartContainer: {
+      width: '100%',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 20,
+      flexDirection: 'row',
+    },
+    smallChart: {
+      width: 150,
+      height: 150,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: isDarkMode ? '#333333' : '#FFFFFF',
+      borderRadius: 10,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.8,
+      shadowRadius: 2,
+      elevation: 1,
+      margin: 10,
     },
     cardRow: {
       flexDirection: 'row',
@@ -137,15 +252,15 @@ const HomeScreen: React.FC = () => {
     },
     serviceScroll: {
       flexDirection: 'row',
-      marginBottom: 20,
+      marginBottom: 10,
     },
     serviceCard: {
-      width: 150,
-      height: 100,
+      width: 130,
+      height: 90,
       backgroundColor: '#0066ff',
-      borderRadius: 10,
-      padding: 20,
-      marginHorizontal: 10,
+      borderRadius: 15,
+      padding: 10,
+      marginHorizontal: 4,
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -159,8 +274,9 @@ const HomeScreen: React.FC = () => {
       backgroundColor: '#00ccff',
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 20,
+      borderRadius: 15,
       marginBottom: 20,
+      marginTop: 5,
     },
     registerButtonText: {
       color: '#fff',
@@ -170,13 +286,13 @@ const HomeScreen: React.FC = () => {
       flexDirection: 'row',
       width: '100%',
       justifyContent: 'space-between',
-      marginBottom: 20,
+      marginBottom: 15,
     },
     smallCard: {
       flex: 1,
       backgroundColor: '#0066ff',
-      borderRadius: 10,
-      padding: 10,
+      borderRadius: 13,
+      padding: 13,
       marginHorizontal: 5,
       alignItems: 'center',
       justifyContent: 'center',
@@ -214,24 +330,25 @@ const HomeScreen: React.FC = () => {
       color: '#333',
     },
     modalView: {
-      margin: 20,
-      backgroundColor: 'white',
-      borderRadius: 20,
+      margin: 50,
+      marginTop: 95,
+      backgroundColor: '#ffffff',
+      borderRadius: 40,
       padding: 35,
       alignItems: 'center',
-      shadowColor: '#000',
+      shadowColor: '#0080ff',
       shadowOffset: {
-        width: 0,
-        height: 2,
+        width: 10,
+        height: 10,
       },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5,
+      shadowOpacity: 0.20,
+      shadowRadius: 9,
+      elevation: 10,
     },
     button: {
       borderRadius: 20,
-      padding: 10,
-      elevation: 2,
+      padding: 13,
+      elevation: 10,
     },
     buttonClose: {
       backgroundColor: '#2196F3',
@@ -268,6 +385,66 @@ const HomeScreen: React.FC = () => {
           <TouchableOpacity style={styles.copyButton} onPress={copyToClipboard}>
             <Text style={styles.copyButtonText}>Copiar Link</Text>
           </TouchableOpacity>
+        </View>
+        <Text style={styles.chartTitle}>Indicação Entre Unidades</Text>
+        <View style={styles.chartContainer}>
+          <PieChart
+            style={{ height: 200 }}
+            data={pieData}
+            innerRadius={30}
+            outerRadius={60}
+            padAngle={0.05}
+          />
+          <View style={styles.chartLegend}>
+            {pieData.map((item) => (
+              <Text key={item.key} style={styles.chartLegendText}>
+                <Text style={{ color: item.svg.fill }}>■ </Text>
+                {item.label}
+              </Text>
+            ))}
+          </View>
+        </View>
+        <View style={styles.smallChartContainer}>
+          <View style={styles.smallChart}>
+            <Text style={styles.chartTitle}>Nº Indicação Atendidas</Text>
+            <PieChart
+              style={{ height: 100 }}
+              data={smallData1}
+              innerRadius={40}
+              outerRadius={50}
+              padAngle={0.05}
+            />
+            <SVGText
+              x={75}
+              y={75}
+              textAnchor="middle"
+              alignmentBaseline="middle"
+              fontSize={24}
+              fill="#8E44AD"
+            >
+              {smallData1[0].amount}
+            </SVGText>
+          </View>
+          <View style={styles.smallChart}>
+            <Text style={styles.chartTitle}>Nº Indicação Pendentes</Text>
+            <PieChart
+              style={{ height: 100 }}
+              data={smallData2}
+              innerRadius={40}
+              outerRadius={50}
+              padAngle={0.05}
+            />
+            <SVGText
+              x={75}
+              y={75}
+              textAnchor="middle"
+              alignmentBaseline="middle"
+              fontSize={24}
+              fill="#8E44AD"
+            >
+              {smallData2[0].amount}
+            </SVGText>
+          </View>
         </View>
         <ScrollView horizontal style={styles.serviceScroll}>
           {['SAC LETHAN', 'VIDEOS EDUCATIVOS', 'OUTRO SERVIÇO'].map((service, index) => (
@@ -308,31 +485,50 @@ const HomeScreen: React.FC = () => {
           setModalVisible(!modalVisible);
         }}
       >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Cadastro de Indicação</Text>
-            <TextInput
-              style={styles.linkInput}
-              placeholder="Nome do Cliente"
-              placeholderTextColor="#888"
-            />
-            <TextInput
-              style={styles.linkInput}
-              placeholder="Email do Cliente"
-              placeholderTextColor="#888"
-            />
-            <TextInput
-              style={styles.linkInput}
-              placeholder="Telefone do Cliente"
-              placeholderTextColor="#888"
-            />
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Cadastrar</Text>
-            </Pressable>
-          </View>
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>Cadastro de Indicação</Text>
+          <TextInput
+            style={styles.linkInput}
+            placeholder="Nome do Completo"
+            placeholderTextColor="#ff0000"
+          />
+          <TextInput
+            style={styles.linkInput}
+            placeholder="Email"
+            placeholderTextColor="#888"
+          />
+          <TextInput
+            style={styles.linkInput}
+            placeholder="Telefone"
+            placeholderTextColor="#ff0000"
+          />
+          <TextInput
+            style={styles.linkInput}
+            placeholder="Kwh"
+            placeholderTextColor="#888"
+          />
+          <TextInput
+            style={styles.linkInput}
+            placeholder="Cidade"
+            placeholderTextColor="#ff0000"
+          />
+          <TextInput
+            style={styles.linkInput}
+            placeholder="Vendedor"
+            placeholderTextColor="#888"
+          />
+          <TextInput
+            style={styles.linkInput}
+            placeholder="ID - Geração Automatica"
+            placeholderTextColor="#ff0000"
+          />
+          <Text style={styles.modalText}>Campos em Vermelho Obrigatorio</Text>
+          <Pressable
+            style={[styles.button, styles.buttonClose]}
+            onPress={() => setModalVisible(!modalVisible)}
+          >
+            <Text style={styles.textStyle}>Cadastrar Indicação</Text>
+          </Pressable>
         </View>
       </Modal>
     </SafeAreaView>
