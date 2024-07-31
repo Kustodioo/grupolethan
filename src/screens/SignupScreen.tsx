@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   StatusBar,
   Keyboard,
   TouchableWithoutFeedback,
@@ -14,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useAuth } from '../context/AuthContext';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import tw from 'twrnc';
 
 const SignupScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const { register } = useAuth();
@@ -39,7 +39,7 @@ const SignupScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       await register({ fullName, cellPhone, email, address, selectedSeller, selectedCity, password });
       Alert.alert('Sucesso', 'Cadastro realizado com sucesso');
       navigation.navigate('Home');
-    } catch (error: any) {  // Adiciona tipo 'any' para o erro
+    } catch (error: any) {
       Alert.alert('Erro', error.message);
     }
   };
@@ -57,35 +57,35 @@ const SignupScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   ];
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={tw`flex-1 bg-gray-800`}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
-      <KeyboardAwareScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScrollView contentContainerStyle={tw`flex-grow justify-center items-center px-5 bg-gray-800`} keyboardShouldPersistTaps="handled">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.innerContainer}>
-            <Text style={styles.title}>Cadastre-se</Text>
+          <View style={tw`w-full items-center`}>
+            <Text style={tw`text-2xl text-white mb-5 text-center`}>Cadastre-se</Text>
             <TextInput
-              style={styles.input}
+              style={tw`w-full h-10 border border-gray-500 mb-5 px-4 bg-white bg-opacity-80 rounded-md text-white`}
               placeholder="Nome Completo"
               placeholderTextColor="#fff"
               value={fullName}
               onChangeText={setFullName}
             />
             <TextInput
-              style={styles.input}
+              style={tw`w-full h-10 border border-gray-500 mb-5 px-4 bg-white bg-opacity-80 rounded-md text-white`}
               placeholder="Celular"
               placeholderTextColor="#fff"
               value={cellPhone}
               onChangeText={setCellPhone}
             />
             <TextInput
-              style={styles.input}
+              style={tw`w-full h-10 border border-gray-500 mb-5 px-4 bg-white bg-opacity-80 rounded-md text-white`}
               placeholder="Email"
               placeholderTextColor="#fff"
               value={email}
               onChangeText={setEmail}
             />
             <TextInput
-              style={styles.input}
+              style={tw`w-full h-10 border border-gray-500 mb-5 px-4 bg-white bg-opacity-80 rounded-md text-white`}
               placeholder="Endereço (opcional)"
               placeholderTextColor="#fff"
               value={address}
@@ -98,9 +98,9 @@ const SignupScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
               setOpen={setOpenSeller}
               setValue={setSelectedSeller}
               placeholder="Selecione um vendedor"
-              style={styles.picker}
+              style={tw`w-full mb-5 bg-white bg-opacity-80 rounded-md`}
               placeholderStyle={{ color: '#fff' }}
-              dropDownContainerStyle={[styles.dropDownContainer, { backgroundColor: '#fff' }]}
+              dropDownContainerStyle={tw`bg-white border border-gray-500`}
               zIndex={5000}
               zIndexInverse={6000}
             />
@@ -111,14 +111,14 @@ const SignupScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
               setOpen={setOpenCity}
               setValue={setSelectedCity}
               placeholder="Selecione uma cidade"
-              style={styles.picker}
+              style={tw`w-full mb-5 bg-white bg-opacity-80 rounded-md`}
               placeholderStyle={{ color: '#fff' }}
-              dropDownContainerStyle={[styles.dropDownContainer, { backgroundColor: '#fff' }]}
+              dropDownContainerStyle={tw`bg-white border border-gray-500`}
               zIndex={4000}
               zIndexInverse={5000}
             />
             <TextInput
-              style={styles.input}
+              style={tw`w-full h-10 border border-gray-500 mb-5 px-4 bg-white bg-opacity-80 rounded-md text-white`}
               placeholder="Senha"
               secureTextEntry
               placeholderTextColor="#fff"
@@ -126,18 +126,18 @@ const SignupScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
               onChangeText={setPassword}
             />
             <TextInput
-              style={styles.input}
+              style={tw`w-full h-10 border border-gray-500 mb-5 px-4 bg-white bg-opacity-80 rounded-md text-white`}
               placeholder="Confirmar Senha"
               secureTextEntry
               placeholderTextColor="#fff"
               value={confirmPassword}
               onChangeText={setConfirmPassword}
             />
-            <TouchableOpacity style={styles.button} onPress={handleSignup}>
-              <Text style={styles.buttonText}>Cadastrar</Text>
+            <TouchableOpacity style={tw`w-full h-10 bg-blue-500 justify-center items-center rounded-md mb-5`} onPress={handleSignup}>
+              <Text style={tw`text-white text-lg`}>Cadastrar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Login')}>
-              <Text style={styles.backButtonText}>Voltar para Login</Text>
+            <TouchableOpacity style={tw`justify-center items-center border border-white rounded-md px-5 py-2`} onPress={() => navigation.navigate('Login')}>
+              <Text style={tw`text-white text-lg`}>Voltar para Login</Text>
             </TouchableOpacity>
           </View>
         </TouchableWithoutFeedback>
@@ -145,76 +145,5 @@ const SignupScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#333333',
-  },
-  container: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    backgroundColor: '#333333',
-  },
-  innerContainer: {
-    width: '100%',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    color: '#fff',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  input: {
-    width: '100%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 20,
-    paddingHorizontal: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: 5,
-    color: '#fff',
-  },
-  picker: {
-    width: '100%',
-    marginBottom: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: 5,
-  },
-  dropDownContainer: {
-    backgroundColor: '#fff',
-    borderColor: 'gray',
-  },
-  button: {
-    width: '100%',
-    height: 40,
-    backgroundColor: '#069DD9',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-    marginBottom: 20,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  backButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#fff',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  backButtonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-});
 
 export default SignupScreen;

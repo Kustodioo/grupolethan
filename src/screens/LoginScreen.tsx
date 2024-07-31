@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   Image,
   ImageBackground,
   StatusBar,
@@ -13,6 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
+import tw from 'twrnc';
 
 const LoginScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [email, setEmail] = useState<string>('');
@@ -21,8 +21,7 @@ const LoginScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const { login } = useAuth();
 
   const handleLogin = () => {
-    // Lógica para login
-    const userData = { email }; // Exemplo de dado de usuário
+    const userData = { email };
     login(userData);
     navigation.navigate('Home');
   };
@@ -32,44 +31,44 @@ const LoginScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   };
 
   return (
-    <ImageBackground source={require('../assets/background.png')} style={styles.background}>
+    <ImageBackground source={require('../assets/background.png')} style={tw`flex-1`}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={tw`flex-1`}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.overlay}>
-            <Image source={require('../assets/logo.png')} style={styles.logo} resizeMode="contain" />
-            <View style={styles.formContainer}>
-              <Text style={styles.title}>Login Grupo Lethan</Text>
+          <View style={tw`absolute inset-0 bg-black bg-opacity-20 justify-center items-center px-8`}>
+            <Image source={require('../assets/logo.png')} style={tw`w-50 h-17 mb-6`} resizeMode="contain" />
+            <View style={tw`w-full items-center`}>
+              <Text style={tw`text-2xl text-white mb-4 text-center`}>Login Grupo Lethan</Text>
               <TextInput
-                style={[styles.input, { marginTop: 5 }]}
+                style={tw`w-full h-10 border border-gray-500 mb-2 px-4 bg-white bg-opacity-80 rounded-md`}
                 placeholder="Email"
                 placeholderTextColor="#aaa"
                 value={email}
                 onChangeText={setEmail}
               />
-              <View style={styles.passwordContainer}>
+              <View style={tw`flex-row items-center w-full mb-2`}>
                 <TextInput
-                  style={styles.inputPassword}
+                  style={tw`flex-1 h-10 border border-gray-500 px-4 bg-white bg-opacity-80 rounded-md`}
                   placeholder="Senha"
                   placeholderTextColor="#aaa"
                   secureTextEntry={secureTextEntry}
                   value={password}
                   onChangeText={setPassword}
                 />
-                <TouchableOpacity onPress={togglePasswordVisibility} style={styles.toggleButton}>
-                  <Text style={styles.toggleButtonText}>{secureTextEntry ? 'Mostrar' : 'Esconder'}</Text>
+                <TouchableOpacity onPress={togglePasswordVisibility} style={tw`absolute right-2 h-10 justify-center items-center`}>
+                  <Text style={tw`text-blue-500 text-sm`}>{secureTextEntry ? 'Mostrar' : 'Esconder'}</Text>
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                <Text style={styles.buttonText}>Entrar</Text>
+              <TouchableOpacity style={tw`w-full h-10 bg-blue-500 justify-center items-center rounded-md mb-2`} onPress={handleLogin}>
+                <Text style={tw`text-white text-lg`}>Entrar</Text>
               </TouchableOpacity>
-              <View style={styles.linkContainer}>
-                <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')} style={styles.linkWrapper}>
-                  <Text style={styles.link}>Esqueceu a senha?</Text>
+              <View style={tw`flex-row justify-center items-center border border-white rounded-md py-1 px-2 mt-2`}>
+                <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')} style={tw`px-2`}>
+                  <Text style={tw`text-white text-sm`}>Esqueceu a senha?</Text>
                 </TouchableOpacity>
-                <View style={styles.divider} />
-                <TouchableOpacity onPress={() => navigation.navigate('Signup')} style={styles.linkWrapper}>
-                  <Text style={styles.link}>Cadastre-se</Text>
+                <View style={tw`w-px h-5 bg-white mx-2`} />
+                <TouchableOpacity onPress={() => navigation.navigate('Signup')} style={tw`px-2`}>
+                  <Text style={tw`text-white text-sm`}>Cadastre-se</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -79,110 +78,5 @@ const LoginScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     </ImageBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    resizeMode: 'cover',
-  },
-  safeArea: {
-    flex: 1,
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 30,
-  },
-  logo: {
-    width: 250,
-    height: 250,
-    marginBottom: -70, // Increased negative margin to overlap more with the form
-  },
-  formContainer: {
-    width: '100%',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    color: '#fff',
-    marginBottom: 10, // Reduced margin bottom to bring the inputs closer
-    textAlign: 'center',
-  },
-  input: {
-    width: '100%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: 5,
-  },
-  passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    marginBottom: 10,
-  },
-  inputPassword: {
-    flex: 1,
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: 5,
-  },
-  toggleButton: {
-    position: 'absolute',
-    right: 10,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  toggleButtonText: {
-    color: '#069DD9',
-    fontSize: 14,
-  },
-  button: {
-    width: '100%',
-    height: 40,
-    backgroundColor: '#069DD9',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-    marginBottom: 10,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  linkContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center', // Center the links
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#fff', // White border color
-    borderRadius: 20, // Rounded corners
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    marginTop: 10,
-  },
-  linkWrapper: {
-    paddingHorizontal: 5,
-  },
-  divider: {
-    width: 1,
-    height: 20,
-    backgroundColor: '#fff', // White color for the divider
-    marginHorizontal: 5,
-  },
-  link: {
-    color: '#fff',
-    fontSize: 14,
-  },
-});
 
 export default LoginScreen;

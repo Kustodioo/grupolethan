@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   StatusBar,
   Keyboard,
   TouchableWithoutFeedback,
@@ -13,6 +12,7 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import tw from 'twrnc';
 
 const ForgotPasswordScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [email, setEmail] = useState<string>('');
@@ -29,27 +29,27 @@ const ForgotPasswordScreen: React.FC<{ navigation: any }> = ({ navigation }) => 
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={tw`flex-1 bg-gray-800`}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1 }}
+        style={tw`flex-1`}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.container}>
-            <Text style={styles.title}>Redefinir Senha</Text>
+          <View style={tw`flex-1 justify-center items-center px-5 bg-gray-800`}>
+            <Text style={tw`text-2xl text-white mb-5 text-center`}>Redefinir Senha</Text>
             <TextInput
-              style={styles.input}
+              style={tw`w-full h-10 border border-gray-500 mb-5 px-4 bg-white bg-opacity-80 rounded-md`}
               placeholder="Email"
               placeholderTextColor="#aaa"
               value={email}
               onChangeText={setEmail}
             />
-            <TouchableOpacity style={styles.button} onPress={handleResetPassword}>
-              <Text style={styles.buttonText}>Enviar Instruções</Text>
+            <TouchableOpacity style={tw`w-full h-10 bg-blue-500 justify-center items-center rounded-md mb-5`} onPress={handleResetPassword}>
+              <Text style={tw`text-white text-lg`}>Enviar Instruções</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Login')}>
-              <Text style={styles.backButtonText}>Voltar para Login</Text>
+            <TouchableOpacity style={tw`justify-center items-center border border-white rounded-md px-5 py-2`} onPress={() => navigation.navigate('Login')}>
+              <Text style={tw`text-white text-lg`}>Voltar para Login</Text>
             </TouchableOpacity>
           </View>
         </TouchableWithoutFeedback>
@@ -57,61 +57,5 @@ const ForgotPasswordScreen: React.FC<{ navigation: any }> = ({ navigation }) => 
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#333333',
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    backgroundColor: '#333333',
-  },
-  title: {
-    fontSize: 24,
-    color: '#fff',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  input: {
-    width: '100%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 20,
-    paddingHorizontal: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: 5,
-  },
-  button: {
-    width: '100%',
-    height: 40,
-    backgroundColor: '#069DD9',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-    marginBottom: 20,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  backButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#fff',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  backButtonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-});
 
 export default ForgotPasswordScreen;
