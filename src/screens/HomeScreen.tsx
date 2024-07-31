@@ -15,6 +15,7 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
@@ -24,7 +25,6 @@ import tw from 'twrnc';
 import RNPickerSelect from 'react-native-picker-select';
 import { v4 as uuidv4 } from 'uuid';
 import { PieChart } from 'react-native-chart-kit';
-import { Dimensions } from 'react-native';
 
 const HomeScreen: React.FC = () => {
   const { user } = useAuth();
@@ -88,12 +88,16 @@ const HomeScreen: React.FC = () => {
     },
   ];
 
+  const gradientButton = {
+    backgroundColor: 'linear-gradient(to right, #ff7e5f, #feb47b)', // substitua pelos seus valores de cor
+  };
+
   return (
     <SafeAreaView style={tw`flex-1 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-200'}`}>
-      <StatusBar translucent backgroundColor="transparent" barStyle={isDarkMode ? "light-content" : "dark-content"} />
+      <StatusBar translucent backgroundColor="transparent" barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <View style={tw`w-full items-center pt-${currentHeight} pb-5 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-200'} relative`}>
         <TouchableOpacity style={tw`absolute top-${currentHeight} right-4 p-2 mt-10`} onPress={toggleTheme}>
-          <FontAwesome name={isDarkMode ? "sun-o" : "moon-o"} size={24} color={isDarkMode ? "#FFA500" : "#000000"} />
+          <FontAwesome name={isDarkMode ? 'sun-o' : 'moon-o'} size={24} color={isDarkMode ? '#FFA500' : '#000000'} />
         </TouchableOpacity>
         <Image source={require('../assets/logo.png')} style={tw`w-60 h-17 mt-4 mb-4`} resizeMode="contain" />
       </View>
@@ -111,8 +115,8 @@ const HomeScreen: React.FC = () => {
               <FontAwesome name="clipboard" size={20} color="#fff" />
               <Text style={tw`text-white text-lg`}>Copiar Link</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={tw`flex-1 h-12 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 justify-center items-center rounded-lg`} onPress={() => Alert.alert('Inteligência', 'Botão Lethan Inteligência pressionado!')}>
-              <FontAwesome name="brain" size={20} color="#fff" />
+            <TouchableOpacity style={[tw`flex-1 h-12 justify-center items-center rounded-lg`, gradientButton]} onPress={() => Alert.alert('Inteligência', 'Botão Lethan Inteligência pressionado!')}>
+              <FontAwesome name="lightbulb-o" size={20} color="#fff" />
               <Text style={tw`text-white text-lg`}>Lethan Inteligência</Text>
             </TouchableOpacity>
           </View>
